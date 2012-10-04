@@ -1,0 +1,3 @@
+d:war/
+d:data
+i:data/libgdx.png
