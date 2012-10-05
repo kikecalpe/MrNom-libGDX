@@ -9,12 +9,24 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import es.dokansoft.gdx.serp.model.Settings;
 
 public class MainMenuScreen extends SerpScreen {
-
+	float vwidth = 320f; // v from virtual
+	float vheight = 480f;
+	private float ppuX;	// pixels per unit on the X axis
+	private float ppuY;	// pixels per unit on the Y axis
+	float width, height = 0;
+	//float ratio; // not needed
+	float tickLevel = 0;
+	float tick = 0;
+	float timer = 0;
+	Matrix4 matrix;
+	boolean inputControl = false;
+	
 	Game game;
 	SpriteBatch spriteBatch;
 	//InputAdapter input; // not necessary at the moment
@@ -34,11 +46,8 @@ public class MainMenuScreen extends SerpScreen {
 		this.game = game;
 		
 		spriteBatch = new SpriteBatch();
-		//this line to setup projection without cameras
-		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, 320, 480);
 		
 		//input = new InputAdapter(); //not necessary at the moment
-		
 		
 		background = Assets.background;
 		logo = Assets.logo;
@@ -78,30 +87,32 @@ public class MainMenuScreen extends SerpScreen {
 
 	@Override
 	public void render(float delta) { 
-		//Gdx.app.log("MainMenuScreen", "starting render()");
+		Gdx.app.log("MainMenuScreen", "starting render()");
 
-		//Gdx.app.log("MainMenuScreen", "render(), processInput()");
+		Gdx.app.log("MainMenuScreen", "render(), processInput()");
 		inputController();
 	    
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-	    //Gdx.app.log("MainMenuScreen", "render(), spriteBatch.begin()");
+	    Gdx.app.log("MainMenuScreen", "render(), spriteBatch.begin()");
 		spriteBatch.begin();
-		spriteBatch.draw(background, 0, 0);
-		spriteBatch.draw(logo, 32, 300); // 0,0 is bottom-left so...
+		spriteBatch.draw(background, 0, 0, width, height); //expand the background in XXL displays
+		// 0,0 is bottom-left so to anchor upper: height - 20*ppuY - logo.getHeight()*ppuY
+		spriteBatch.draw(logo, 32*ppuX, height - 20*ppuY - logo.getHeight()*ppuY,
+				256*ppuX, 160*ppuY); 
 		spriteBatch.draw(mainMenu, 64, 132); // -220 - 128 (menu height)
 		if (settings.getBoolean("soundOn"))
 			spriteBatch.draw(buttons, 0, 0, 0, 0, 64, 64);
 		else
 			spriteBatch.draw(buttons, 0, 0, 64, 0, 64, 64);
 		spriteBatch.end();
-		//Gdx.app.log("MainMenuScreen", "ended render()");
+		Gdx.app.log("MainMenuScreen", "ended render()");
 	}
 
 	private void inputController(){
 		// TODO Reescribir con inputAdapter().touchUp() ??????
-		Gdx.app.error("MainMenuScreen", "inputController(), starting to process input");
+		Gdx.app.log("MainMenuScreen", "inputController(), starting to process input");
 		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
 			Gdx.app.error("MainMenuScreen", "inputController(), touched!");
 			Vector3 touchPos = new Vector3();
@@ -154,45 +165,16 @@ public class MainMenuScreen extends SerpScreen {
 	@Override
 	public void resize(int width, int height) {
 		Gdx.app.log("MainMenuScreen", "resize()ing");
-		/*
+		this.width = width;
+		this.height = height;
+		//this.ratio = this.width/this.height;
+		ppuX = (float)width / vwidth;
+		Gdx.app.log("Stress", "resize().ppuX: "+ppuX);
+		ppuY = (float)height / vheight;
+		Gdx.app.log("Stress", "resize().ppuY: "+ppuY);
+		matrix = spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 
-		Gdx.app.log("MainMenuScreen", "resize()ing: calculate new viewport");
-		//fisical Ratio
-		float aspectRatio = (float) width / (float) height; 
-		//scale is the factor to which scale our scene image
-		float scale = 1f;
-		// crop is the amount of pixels to be cropped from the viewport in order to keep
-		// the aspect ratio of the scene image.
-		Vector2 crop = new Vector2(0f, 0f);
-		
-		// if aspectRatio is greater than the virtual aspect ratio it is because 
-		// the physical resolution is wider
-		if (aspectRatio > VRATIO){
-			Gdx.app.log("MainMenuScreen", "resize()ing: aspectRatio > VRATIO");
-			scale = (float) height/ (float) VHEIGHT;
-			crop.x = (width - VWIDTH*scale)/2f;
-		} else if (aspectRatio < VRATIO){
-			Gdx.app.log("MainMenuScreen", "resize()ing: aspectRatio < VRATIO");
-			scale = (float) width / (float) VWIDTH;
-			crop.y = (height - VHEIGHT*scale)/2f;
-		} else {
-			Gdx.app.log("MainMenuScreen", "resize()ing: aspectRatio = VRATIO");
-			scale = (float) width/ (float) VWIDTH;
-		}
-		
-		//setting the viewport
-		float w = (float) VWIDTH*scale;
-		float h = (float) VHEIGHT*scale;
-		glViewport = new Rectangle(crop.x, crop.y, w, h);*/
-		/*Gdx.app.log("MainMenuScreen", "aspectRatio: "+aspectRatio+" (width: " +
-				width+ ", height: "+height+")");
-		Gdx.app.log("MainMenuScreen", "constructing new OrthographicCamera()");
-        camera = new OrthographicCamera(2f * aspectRatio, 2f);
-		glViewport = new Rectangle(0, 0, VWIDTH, VHEIGHT);
-        Gdx.app.log("MainMenuScreen", "going to camera.update()");
-		//camera.setToOrtho(false);
-		camera.update();
-	    Gdx.app.log("MainMenuScreen", "ended resize()");*/
+	    Gdx.app.log("MainMenuScreen", "ended resize()");
 	}
 	@Override
 	public void dispose() {
