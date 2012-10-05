@@ -32,7 +32,7 @@ public abstract class SerpScreen implements Screen{
 	@Override
 	public abstract void dispose();
 
-	protected boolean inBounds( Vector3 touchPos, int x, int y, int width, int height) {
+	protected boolean inBounds( Vector3 touchPos, float x, float y, float width, float height) {
 		Gdx.app.log("SerpScreen", "starting calculate inBounds()");
 		if (touchPos.x > x && touchPos.x < x + width -1 &&
 				touchPos.y > y && touchPos.y < y + height -1){

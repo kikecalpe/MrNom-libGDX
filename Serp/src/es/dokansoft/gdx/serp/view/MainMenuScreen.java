@@ -122,18 +122,20 @@ public class MainMenuScreen extends SerpScreen {
 			
 			Gdx.app.error("MainMenuScreen", "inputController(), touchPos = " +
 					touchPos.toString());
-			if (inBounds(touchPos, 0, 416, 64, 64)){
+			if (inBounds(touchPos, 0, 416*ppuY, 64*ppuX, 64*ppuY)){
 				Gdx.app.error("MainMenuScreen", "inputController(),  sound button pressed...");
 				if (!settings.getBoolean("soundOn")){
 					Gdx.app.error("MainMenuScreen", "inputController(), ... sound enabled");
 					settings.putBoolean("soundOn", true);
 					click.play(1);
+					return;
 				} else {
 					Gdx.app.error("MainMenuScreen", "inputController(), ...sound disabled");
 					settings.putBoolean("soundOn",false);
+					return;
 				}
 			}
-			if (inBounds(touchPos, 64, 220, 192, 42)) {
+			if (inBounds(touchPos, 64*ppuX, 220*ppuY, 192*ppuX, 42*ppuY)) {
 				Gdx.app.error("MainMenuScreen", "inputController(), play touched!");
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
@@ -141,25 +143,26 @@ public class MainMenuScreen extends SerpScreen {
 				//game.setScreen(new GameScreen(game,assets));
 				return;
 			}
-			if (inBounds(touchPos, 64, Gdx.graphics.getHeight()-348 + 42, 192, 42)) {
+			if (inBounds(touchPos, 64*ppuX, 262*ppuY, 192*ppuX, 42*ppuY)) { // y = 220 + 42 = 262
 				Gdx.app.error("MainMenuScreen", "inputController(), highscores touched!");
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
 				Gdx.app.error("MainMenuScreen", "inputController(), not going to HighscoreScreen");
-				game.setScreen(new HighscoreScreen(game,assets));
+				//game.setScreen(new HighscoreScreen(game,assets));
 				return;
 			}
-			if (inBounds(touchPos, 64, Gdx.graphics.getHeight()-348 + 84, 192, 42)) {
+			if (inBounds(touchPos, 64*ppuX, 304*ppuY, 192*ppuX, 42*ppuY)) { // y = 262 + 42 =304
 				Gdx.app.error("MainMenuScreen", "inputController(), help touched!");
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
 				Gdx.app.error("MainMenuScreen", "inputController(), not going to HelpScreen");
-				game.setScreen(new HelpScreen(game,assets));
+				//game.setScreen(new HelpScreen(game,assets));
 				return;
 			}
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)){
 			Gdx.app.error("MainMenuScreen", "inputController(), ANY_KEY pressed");
+			return;
 		}
 		//Gdx.app.error("MainMenuScreen", "inputController(), ended");
 	}
