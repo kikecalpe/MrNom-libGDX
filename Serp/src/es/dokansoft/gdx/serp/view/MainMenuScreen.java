@@ -101,11 +101,13 @@ public class MainMenuScreen extends SerpScreen {
 		// 0,0 is bottom-left so to anchor upper: height - 20*ppuY - logo.getHeight()*ppuY
 		spriteBatch.draw(logo, 32*ppuX, height - 20*ppuY - logo.getHeight()*ppuY,
 				256*ppuX, 160*ppuY); 
-		spriteBatch.draw(mainMenu, 64, 132); // -220 - 128 (menu height)
+		spriteBatch.draw(mainMenu, 64*ppuX, 132*ppuY,192*ppuX, 128*ppuY); // -220 - 128 = (menu height)
 		if (settings.getBoolean("soundOn"))
-			spriteBatch.draw(buttons, 0, 0, 0, 0, 64, 64);
+			spriteBatch.draw(buttons, 0, 0, 64*ppuX, 64*ppuY,
+					0, 0, 64, 64, false, false);
 		else
-			spriteBatch.draw(buttons, 0, 0, 64, 0, 64, 64);
+			spriteBatch.draw(buttons, 0, 0, 64*ppuX, 64*ppuY, 
+					64, 0, 64, 64, false, false);
 		spriteBatch.end();
 		Gdx.app.log("MainMenuScreen", "ended render()");
 	}
