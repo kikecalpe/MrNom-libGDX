@@ -10,54 +10,86 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import es.dokansoft.gdx.serp.model.Settings;
 
 public class HelpScreen3 extends SerpScreen {
+	float vwidth = 320f; // v from virtual
+	float vheight = 480f;
+	private float ppuX;	// pixels per unit on the X axis
+	private float ppuY;	// pixels per unit on the Y axis
+	float width, height = 0;
+	Matrix4 matrix;
+
+	Game game;
 	SpriteBatch spriteBatch;
-	OrthographicCamera camera;
 
-	Preferences settings = Settings.settings;
+	Preferences settings;
 		
-	Texture background = assets.get("background.png", Texture.class);
-	Texture mainMenu = assets.get("mainmenu.png", Texture.class);
-	Texture numbers = assets.get("numbers.png", Texture.class);
-	Texture buttons = assets.get("buttons.png", Texture.class);
-	Texture help3 = assets.get("help3.png", Texture.class);
-	Sound click = assets.get("click.ogg", Sound.class);
+	Texture background;
+	Texture mainMenu;
+	Texture numbers;
+	Texture buttons;
+	Texture help3;
+	Sound click;
 
+	public HelpScreen3(Game game) {
+		super(game);
+		
+		this.game = game;
+		
+		spriteBatch = new SpriteBatch();
+
+		settings = Settings.settings;
+		
+		background = Assets.background;
+		buttons = Assets.buttons;
+		help3 = Assets.help3;
+		click = Assets.click;
+
+	}
 	public HelpScreen3(Game game, AssetManager assets) {
 		super(game,assets);
 		
+		settings = Settings.settings;
+		
+		background = assets.get("background.png", Texture.class);
+		buttons = assets.get("buttons.png", Texture.class);
+		help3 = assets.get("help3.png", Texture.class);
+		click = assets.get("click.ogg", Sound.class);
+
 	}
 
 	@Override
 	public void render(float delta) {
-		processInput();
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		inputController();
+		
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-	    camera.update();
-	    spriteBatch.setProjectionMatrix(camera.combined);
 
 		spriteBatch.begin();
-		spriteBatch.draw(background, 0, 0);
-		spriteBatch.draw(help3, 64, 100);
-		spriteBatch.draw(buttons, 256, 416, 0, 64, 64, 64);
+		spriteBatch.draw(background, 0, 0, width, height); //expand the background in XXL displays
+		spriteBatch.draw(help3, 64*ppuX, height - 100*ppuY - help3.getHeight()*ppuY,
+				192*ppuX, 256*ppuY);
+		spriteBatch.draw(buttons, 256*ppuX, 0, 64*ppuX, 64*ppuY,
+				0, 64, 64, 64, false, false);
+		spriteBatch.end();
 	}
 	
-	public void processInput() {
+	public void inputController() {
 		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-			if (inBounds(touchPos, 256, 416, 64, 64)){
+			if (inBounds(touchPos, 256*ppuX, 416*ppuY, 64*ppuX, 64*ppuY)){
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				game.setScreen(new MainMenuScreen(game,assets));
+				game.setScreen(new MainMenuScreen(game));
 				return;
 			}
 		}
+
 	}
 
 	@Override
@@ -75,30 +107,37 @@ public class HelpScreen3 extends SerpScreen {
 	@Override
 	public void dispose() {
 		//  Auto-generated method stub
-		
+		spriteBatch.dispose();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
+		this.width = width;
+		this.height = height;
+		//this.ratio = this.width/this.height;
+		ppuX = (float)width / vwidth;
+		Gdx.app.log("Stress", "resize().ppuX: "+ppuX);
+		ppuY = (float)height / vheight;
+		Gdx.app.log("Stress", "resize().ppuY: "+ppuY);
+		matrix = spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 		
 	}
 
 	@Override
 	public void drawText(String line, int x, int y) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 	

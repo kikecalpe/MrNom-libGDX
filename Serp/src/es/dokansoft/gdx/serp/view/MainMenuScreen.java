@@ -20,12 +20,7 @@ public class MainMenuScreen extends SerpScreen {
 	private float ppuX;	// pixels per unit on the X axis
 	private float ppuY;	// pixels per unit on the Y axis
 	float width, height = 0;
-	//float ratio; // not needed
-	float tickLevel = 0;
-	float tick = 0;
-	float timer = 0;
 	Matrix4 matrix;
-	boolean inputControl = false;
 	
 	Game game;
 	SpriteBatch spriteBatch;
@@ -116,55 +111,55 @@ public class MainMenuScreen extends SerpScreen {
 		// TODO Reescribir con inputAdapter().touchUp() ??????
 		Gdx.app.log("MainMenuScreen", "inputController(), starting to process input");
 		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-			Gdx.app.error("MainMenuScreen", "inputController(), touched!");
+			Gdx.app.log("MainMenuScreen", "inputController(), touched!");
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			
-			Gdx.app.error("MainMenuScreen", "inputController(), touchPos = " +
+			Gdx.app.log("MainMenuScreen", "inputController(), touchPos = " +
 					touchPos.toString());
 			if (inBounds(touchPos, 0, 416*ppuY, 64*ppuX, 64*ppuY)){
-				Gdx.app.error("MainMenuScreen", "inputController(),  sound button pressed...");
+				Gdx.app.log("MainMenuScreen", "inputController(),  sound button pressed...");
 				if (!settings.getBoolean("soundOn")){
-					Gdx.app.error("MainMenuScreen", "inputController(), ... sound enabled");
+					Gdx.app.log("MainMenuScreen", "inputController(), ... sound enabled");
 					settings.putBoolean("soundOn", true);
 					click.play(1);
 					return;
 				} else {
-					Gdx.app.error("MainMenuScreen", "inputController(), ...sound disabled");
+					Gdx.app.log("MainMenuScreen", "inputController(), ...sound disabled");
 					settings.putBoolean("soundOn",false);
 					return;
 				}
 			}
 			if (inBounds(touchPos, 64*ppuX, 220*ppuY, 192*ppuX, 42*ppuY)) {
-				Gdx.app.error("MainMenuScreen", "inputController(), play touched!");
+				Gdx.app.log("MainMenuScreen", "inputController(), play touched!");
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				Gdx.app.error("MainMenuScreen", "inputController(), not going to GameScreen");
+				Gdx.app.log("MainMenuScreen", "inputController(), not going to GameScreen");
 				//game.setScreen(new GameScreen(game,assets));
 				return;
 			}
 			if (inBounds(touchPos, 64*ppuX, 262*ppuY, 192*ppuX, 42*ppuY)) { // y = 220 + 42 = 262
-				Gdx.app.error("MainMenuScreen", "inputController(), highscores touched!");
+				Gdx.app.log("MainMenuScreen", "inputController(), highscores touched!");
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				Gdx.app.error("MainMenuScreen", "inputController(), not going to HighscoreScreen");
+				Gdx.app.log("MainMenuScreen", "inputController(), not going to HighscoreScreen");
 				//game.setScreen(new HighscoreScreen(game,assets));
 				return;
 			}
 			if (inBounds(touchPos, 64*ppuX, 304*ppuY, 192*ppuX, 42*ppuY)) { // y = 262 + 42 =304
-				Gdx.app.error("MainMenuScreen", "inputController(), help touched!");
+				Gdx.app.log("MainMenuScreen", "inputController(), help touched!");
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				Gdx.app.error("MainMenuScreen", "inputController(), not going to HelpScreen");
-				//game.setScreen(new HelpScreen(game,assets));
+				Gdx.app.log("MainMenuScreen", "inputController(), not going to HelpScreen");
+				game.setScreen(new HelpScreen(game));
 				return;
 			}
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)){
-			Gdx.app.error("MainMenuScreen", "inputController(), ANY_KEY pressed");
+			Gdx.app.log("MainMenuScreen", "inputController(), ANY_KEY pressed");
 			return;
 		}
-		//Gdx.app.error("MainMenuScreen", "inputController(), ended");
+		//Gdx.app.log("MainMenuScreen", "inputController(), ended");
 	}
 
 	@Override
@@ -227,19 +222,16 @@ public class MainMenuScreen extends SerpScreen {
 		// Auto-generated method stub
 		Gdx.app.log("MainMenuScreen", "show()ing");
 	}
-
 	@Override
 	public void hide() {
 		// Auto-generated method stub
 		Gdx.app.log("MainMenuScreen", "hide()ing");
 	}
-
 	@Override
 	public void pause() {
 		// Auto-generated method stub
 		Gdx.app.log("MainMenuScreen", "pause()ing");
 	}
-
 	@Override
 	public void resume() {
 		// Auto-generated method stub
