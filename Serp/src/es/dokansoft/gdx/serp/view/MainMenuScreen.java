@@ -143,7 +143,7 @@ public class MainMenuScreen extends SerpScreen {
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
 				Gdx.app.log("MainMenuScreen", "inputController(), not going to HighscoreScreen");
-				//game.setScreen(new HighscoreScreen(game,assets));
+				game.setScreen(new HighscoreScreen(game));
 				return;
 			}
 			if (inBounds(touchPos, 64*ppuX, 304*ppuY, 192*ppuX, 42*ppuY)) { // y = 262 + 42 =304

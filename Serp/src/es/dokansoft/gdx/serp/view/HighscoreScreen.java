@@ -32,6 +32,7 @@ public class HighscoreScreen extends SerpScreen {
 	Preferences highscores;
 	
 	Texture background;
+	Texture mainMenu;
 	Texture numbers;
 	Texture buttons;
 
@@ -48,6 +49,7 @@ public class HighscoreScreen extends SerpScreen {
 		highscores = Settings.highscores;
 		
 		background = Assets.background;
+		mainMenu = Assets.mainMenu;
 		numbers = Assets.numbers;
 		buttons = Assets.buttons;
 		click = Assets.click;
@@ -73,14 +75,16 @@ public class HighscoreScreen extends SerpScreen {
 	@Override
 	public void render(float delta){
 		inputController();
+
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-	    camera.update();
-	    spriteBatch.setProjectionMatrix(camera.combined);
 
 		spriteBatch.begin();
-		spriteBatch.draw(background, 0, 0);
-		spriteBatch.draw(mainMenu, 64, 20, 0, 42, 196, 42);
+		spriteBatch.draw(background, 0, 0, width, height); //expand the background in XXL displays
+		spriteBatch.draw(mainMenu, 64*ppuX, height - 62*ppuY, 196*ppuX, 42*ppuY, 
+				0, 42, 196, 42, false, false);
+		spriteBatch.draw(buttons, 256*ppuX, 0, 64*ppuX, 64*ppuY,
+				0, 64, 64, 64, false, false);
 			
 		int y = 100;
 		for (int i = 0; i < 5; i++) {
@@ -88,7 +92,6 @@ public class HighscoreScreen extends SerpScreen {
 			y += 50;
 		}
 			
-		spriteBatch.draw(buttons, 0, 416, 64, 64, 64, 64);
 		spriteBatch.end();
 	}
 
@@ -109,6 +112,7 @@ public class HighscoreScreen extends SerpScreen {
 		/*
 		 * Usar siempre entre spriteBatch.begin() y end()
 		 */
+		Gdx.app.error("HighscoreScreen", "drawText(), line.isEmpty(): "+line.isEmpty());
         int len = line.length();
         
         for (int i = 0; i < len; i++) {
