@@ -13,11 +13,8 @@ public class Settings {
 		settings.flush();
 		
 		// create highscores
-		int[] hs = { 100, 80, 50, 30, 10 };
-		for (int i: hs){
-			hs[i] = highscores.getInteger("" + i, hs[i]);
-		}
-		highscores.flush();
+		setHighscores();
+		
 	}
 	
 	public static void addScore(int score) {
@@ -34,4 +31,12 @@ public class Settings {
         }
         highscores.flush();
     }
+	private void setHighscores(){
+		
+		int[] hs = { 100, 80, 50, 30, 10 };
+		for (int i: hs){
+			hs[i] = highscores.getInteger("" + i, hs[i]);
+		}
+		highscores.flush();
+	}
 }

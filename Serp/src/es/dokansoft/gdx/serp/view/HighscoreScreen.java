@@ -53,6 +53,8 @@ public class HighscoreScreen extends SerpScreen {
 		numbers = Assets.numbers;
 		buttons = Assets.buttons;
 		click = Assets.click;
+		
+		setLines();
 
 	}
 	public HighscoreScreen(Game game, AssetManager assets) {
@@ -86,10 +88,10 @@ public class HighscoreScreen extends SerpScreen {
 		spriteBatch.draw(buttons, 256*ppuX, 0, 64*ppuX, 64*ppuY,
 				0, 64, 64, 64, false, false);
 			
-		int y = 100;
+		int y = 120;
 		for (int i = 0; i < 5; i++) {
-			drawText(lines[i], 20, y);
-			y += 50;
+			drawText(lines[i], 40, y);
+			y += 60;
 		}
 			
 		spriteBatch.end();
@@ -112,7 +114,7 @@ public class HighscoreScreen extends SerpScreen {
 		/*
 		 * Usar siempre entre spriteBatch.begin() y end()
 		 */
-		Gdx.app.error("HighscoreScreen", "drawText(), line.isEmpty(): "+line.isEmpty());
+		Gdx.app.log("HighscoreScreen", "drawText(), line.isEmpty(): "+line.isEmpty());
         int len = line.length();
         
         for (int i = 0; i < len; i++) {
@@ -133,9 +135,11 @@ public class HighscoreScreen extends SerpScreen {
                 srcWidth = 20;
             }
     
-            spriteBatch.draw(numbers, x, y, srcWidth/2, 16, srcWidth, 32, 
-            		2, 2, 0, srcX, 0, srcWidth, 32, false, false);
-            //spritebatch.draw(numbers, x, y, srcX, 0, srcWidth, 32);
+            /*spriteBatch.draw(numbers, x*ppuX, y*ppuY, srcWidth/2, 16, srcWidth*ppuX, 32*ppuY, 
+            		0, 0, 0, srcX, 0, srcWidth, 32, false, false);
+            spriteBatch.draw(numbers, x, y, srcX, 0, srcWidth, 32);*/
+            spriteBatch.draw(numbers, x*ppuX, y*ppuY, srcWidth*ppuX, 32*ppuY, 
+            		srcX, 0, srcWidth, 32, false, false);
             x += srcWidth;
         }
     }
@@ -151,7 +155,15 @@ public class HighscoreScreen extends SerpScreen {
 			}
 		}
 	}
-
+	private void setLines(){
+		int i;
+		int[] hs = { 100, 80, 50, 30, 10 };
+		for (i = 0; i<5; i++){
+			lines[i] = ""+highscores.getInteger(""+i, hs[i]);
+			Gdx.app.error("HighscoreScreen", "setLines(), lines[i]: "+lines[i]);
+		}
+	}
+	
 	@Override
 	public void dispose() {
 		spriteBatch.dispose();
