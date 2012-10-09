@@ -89,7 +89,7 @@ public class HighscoreScreen extends SerpScreen {
 				0, 64, 64, 64, false, false);
 			
 		int y = 120;
-		for (int i = 0; i < 5; i++) {
+		for (int i = 4; i >= 0; i--) {
 			drawText(lines[i], 40, y);
 			y += 60;
 		}
@@ -147,10 +147,10 @@ public class HighscoreScreen extends SerpScreen {
 		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			if (inBounds(touchPos, 0, 416*ppuY, 64*ppuX, 64*ppuY)){
+			if (inBounds(touchPos, 256*ppuX, 416*ppuY, 64*ppuX, 64*ppuY)){
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				game.setScreen(new HelpScreen2(game));
+				game.setScreen(new MainMenuScreen(game));
 				return;
 			}
 		}

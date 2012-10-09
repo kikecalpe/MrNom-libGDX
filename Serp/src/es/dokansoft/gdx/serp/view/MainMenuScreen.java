@@ -110,6 +110,7 @@ public class MainMenuScreen extends SerpScreen {
 	private void inputController(){
 		// TODO Reescribir con inputAdapter().touchUp() ??????
 		Gdx.app.log("MainMenuScreen", "inputController(), starting to process input");
+
 		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
 			Gdx.app.log("MainMenuScreen", "inputController(), touched!");
 			Vector3 touchPos = new Vector3();
