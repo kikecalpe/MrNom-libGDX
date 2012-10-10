@@ -136,7 +136,7 @@ public class MainMenuScreen extends SerpScreen {
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
 				Gdx.app.log("MainMenuScreen", "inputController(), not going to GameScreen");
-				game.setScreen(new GameScreen(game,assets));
+				game.setScreen(new GameScreen(game));
 				return;
 			}
 			if (inBounds(touchPos, 64*ppuX, 262*ppuY, 192*ppuX, 42*ppuY)) { // y = 220 + 42 = 262
@@ -180,7 +180,7 @@ public class MainMenuScreen extends SerpScreen {
 	@Override
 	public void dispose() {
 		Gdx.app.log("MainMenuScreen", "dispose()ing");
-		spriteBatch.dispose();
+		//spriteBatch.dispose();
 		//assets.dispose();
 		Gdx.app.log("MainMenuScreen", "ended dispose()");
 	}
@@ -189,33 +189,6 @@ public class MainMenuScreen extends SerpScreen {
 		 * Usar siempre entre spriteBatch.begin() y end()
 		 */
 		Gdx.app.log("MainMenuScreen", "starting drawText(), will get numbers.png now");
-		Texture numbers = assets.get("numbers.png", Texture.class);
-		
-		int len = line.length();
-		for (int i = 0; i < len; i++){
-			char character = line.charAt(i);
-			
-			if (character == ' '){
-				x += 20;
-				continue;
-			}
-			
-			int srcX = 0;
-			int srcWidth = 0;
-			if (character == '.'){
-				srcX = 200;
-				srcWidth = 10;
-			} else {
-				srcX = (character - '0') * 20; // NI PUTA IDEA DE COMO VA ESTO
-				srcWidth = 20;
-			}
-			Gdx.app.log("MainMenuScreen", "drawText() will draw spritebatch now");
-			//spriteBatch.begin();
-			spriteBatch.draw(numbers, x, y, srcX, 0, srcWidth, 32);
-			//spriteBatch.end();
-			x += srcWidth;
-			Gdx.app.log("MainMenuScreen", "ended drawText()");
-		}
 	}
 
 	@Override

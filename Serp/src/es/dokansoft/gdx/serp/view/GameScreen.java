@@ -117,7 +117,7 @@ public class GameScreen extends SerpScreen {
 	public void render(float delta) {
 		Gdx.app.log("GameScreen", "render()ing");
 		
-		Gdx.gl.glClearColor(0, 0, 0f, 1);
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		spriteBatch.begin();
@@ -143,8 +143,7 @@ public class GameScreen extends SerpScreen {
 			inputGameOver();
 			drawGameOverUI();
 		}
-		
-		drawText(score, (int)width / 2 - score.length()*10, 10);
+		//drawText(score, ((int)width / 2 - score.length()*10), 10);
 		
 		shaperenderer.end();
 		spriteBatch.end();
@@ -269,7 +268,7 @@ public class GameScreen extends SerpScreen {
 		y = head.y * 32 + 16;
 		if (headPixmap != null)
 			spriteBatch.draw(headPixmap, x*ppuX - (headPixmap.getWidth() / 2)*ppuX, 
-				y*ppuY - (headPixmap.getHeight() /2)*ppuY);
+				y*ppuY - (headPixmap.getHeight() /2)*ppuY, 42*ppuX, 42*ppuY);
 	}
 	/*
 	 * state.ready
@@ -281,7 +280,7 @@ public class GameScreen extends SerpScreen {
 	private void drawReadyUI() {
 				
 		spriteBatch.draw(ready, width/2 - 112*ppuX, height/2 - 48*ppuY, 225*ppuX, 96*ppuY);
-		shaperenderer.line(0, 52*ppuY, width, 52*ppuY);
+		shaperenderer.line(0, 64*ppuY, width, 64*ppuY);
 	}
 	/*
 	 * state.Running
@@ -320,7 +319,7 @@ public class GameScreen extends SerpScreen {
 				
 		spriteBatch.draw(buttons, 0, height-64*ppuY, 64*ppuX, 64*ppuY,
 				64, 128, 64, 64, false, false); // pause button
-		shaperenderer.line(0, 52*ppuY, width, 52*ppuY);
+		shaperenderer.line(0, 64*ppuY, width, 64*ppuY);
 		spriteBatch.draw(buttons, 0, 0, 64*ppuX, 64*ppuY,
 				64, 64, 64, 64, false, false); // turn left button
 		spriteBatch.draw(buttons, width -64*ppuX, 0, 64*ppuX, 64*ppuY,
@@ -349,7 +348,7 @@ public class GameScreen extends SerpScreen {
 	private void drawPausedUI() {
 		
 		spriteBatch.draw(pause, width/2 - 80*ppuX, height/2 - 48*ppuY, 160*ppuX, 96*ppuY);
-		shaperenderer.line(0, 52*ppuY, width, 52*ppuY);
+		shaperenderer.line(0, 64*ppuY, width, 64*ppuY);
 	}
 	/*
 	 * state.GameOver
@@ -371,7 +370,7 @@ public class GameScreen extends SerpScreen {
 		spriteBatch.draw(gameover, width/2 - 98*ppuX, (height/3)*2 - 25*ppuY, 196*ppuX, 50*ppuY);
 		spriteBatch.draw(buttons, width/2 - 32*ppuX, height/3 -32*ppuY, 64*ppuX, 64*ppuY,
 				0, 128, 64, 64, false, false);
-		shaperenderer.line(0, 52*ppuY, width, 52*ppuY);
+		shaperenderer.line(0, 64*ppuY, width, 64*ppuY);
 	}
 	
 }

@@ -1,10 +1,11 @@
 package es.dokansoft.gdx.serp.model;
 
-import java.util.Random;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 
 public class World {
 	static final int WORLD_WIDTH = 10;
-	static final int WORLD_HEIGHT = 13;
+	static final int WORLD_HEIGHT = 15;
 	static final int SCORE_INCREMENT = 10;
 	static final float TICK_INITIAL = 0.4f;
 	static final float TICK_DECREMENT = 0.15f;
@@ -15,7 +16,6 @@ public class World {
 	private int score = 0;
 	
 	private boolean fields[][] = new boolean[WORLD_WIDTH][WORLD_HEIGHT];
-	private Random random = new Random();
 	private float tickTime = 0;
 	private static float tick;
 	
@@ -27,8 +27,8 @@ public class World {
 	
 	public void placeStain(){
 		for (int x=0; x < WORLD_WIDTH; x++){
-			for (int y = 0; y < WORLD_HEIGHT; y++){
-				fields[x][y] = false;
+			for (int y = 2; y < WORLD_HEIGHT; y++){
+				fields[x][y] = false; // 2 <= y <=15, 0 and 1 are placed our direction buttons
 			}
 		}
 		
@@ -38,21 +38,22 @@ public class World {
 			fields[part.x][part.y] = true;
 		}
 		
-		int stainX = random.nextInt(WORLD_WIDTH);
-		int stainY = random.nextInt(WORLD_HEIGHT);
+		int stainX = MathUtils.random(WORLD_WIDTH-1);
+		Gdx.app.log("World", "placeStain(); stainX: "+stainX);
+		int stainY = MathUtils.random(2, WORLD_HEIGHT-1);
+		Gdx.app.log("World", "placeStain(); stainY: "+stainY);
+		
 		while (true) {
 			if (fields[stainX][stainY] == false)
 				break;
 			stainX +=1;
-			if (stainX >= WORLD_WIDTH) {
+			if (stainX >= WORLD_WIDTH) 
 				stainX = 0;
-				stainY += 1;
-				if (stainY >= WORLD_HEIGHT){
-					stainY = 0;
-				}
-			}
+			stainY += 1;
+			if (stainY >= WORLD_HEIGHT)
+				stainY = 2;
 		}
-		stain = new Stain(stainX, stainY, random.nextInt(3));
+		stain = new Stain(stainX, stainY, MathUtils.random(2));
 	}
 	
 	public void update(float deltaTime) {

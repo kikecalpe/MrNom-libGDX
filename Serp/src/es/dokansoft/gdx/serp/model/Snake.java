@@ -13,7 +13,7 @@ public class Snake {
 	public int direction;
 	
 	public Snake() {
-		direction = UP;
+		direction = DOWN;
 		parts.add(new SnakePart(5,6));
 		parts.add(new SnakePart(5,7));
 		parts.add(new SnakePart(5,8));
@@ -48,11 +48,11 @@ public class Snake {
 		}
 		
 		if (direction == UP)
-			head.y -= 1;
+			head.y += 1;
 		if (direction == LEFT)
 			head.x -= 1;
 		if (direction == DOWN)
-			head.y += 1;
+			head.y -= 1;
 		if (direction == RIGHT)
 			head.x += 1;
 		
@@ -60,10 +60,10 @@ public class Snake {
 			head.x = 9;
 		if (head.x > 9)
 			head.x = 0;
-		if (head.y < 0)
-			head.y = 12;
-		if (head.y > 12)
-			head.y = 0;
+		if (head.y < 2)
+			head.y = 14;
+		if (head.y > 14)
+			head.y = 2;
 	}
 	
 	public boolean checkBitten() {
