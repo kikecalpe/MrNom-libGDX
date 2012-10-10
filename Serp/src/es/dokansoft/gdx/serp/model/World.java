@@ -9,15 +9,15 @@ public class World {
 	static final float TICK_INITIAL = 0.4f;
 	static final float TICK_DECREMENT = 0.15f;
 	
-	public Snake snake;
-	public Stain stain;
-	public boolean gameOver = false;
-	public int score = 0;
+	private Snake snake;
+	private Stain stain;
+	private boolean gameOver = false;
+	private int score = 0;
 	
-	boolean fields[][] = new boolean[WORLD_WIDTH][WORLD_HEIGHT];
-	Random random = new Random();
-	float tickTime = 0;
-	static float tick;
+	private boolean fields[][] = new boolean[WORLD_WIDTH][WORLD_HEIGHT];
+	private Random random = new Random();
+	private float tickTime = 0;
+	private static float tick;
 	
 	public World(){
 		tick = TICK_INITIAL;
@@ -85,5 +85,77 @@ public class World {
 				}
 			}
 		}
+	}
+
+
+
+	/**
+	 * @return the snake
+	 */
+	public Snake getSnake() {
+		return snake;
+	}
+
+	/**
+	 * @param snake the snake to set
+	 */
+	public void setSnake(Snake snake) {
+		this.snake = snake;
+	}
+
+	/**
+	 * @return the stain
+	 */
+	public Stain getStain() {
+		return stain;
+	}
+
+	/**
+	 * @param stain the stain to set
+	 */
+	public void setStain(Stain stain) {
+		this.stain = stain;
+	}
+
+	/**
+	 * @return the gameOver
+	 */
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	/**
+	 * @param gameOver the gameOver to set
+	 */
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+
+	/**
+	 * @return the score
+	 */
+	public int getScore() {
+		return score;
+	}
+
+	/**
+	 * @param score the score to set
+	 */
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	/**
+	 * @return the tick
+	 */
+	public static float getTick() {
+		return tick;
+	}
+
+	/**
+	 * @param tick the tick to set
+	 */
+	public static void setTick(float tick) {
+		World.tick = tick;
 	}
 }

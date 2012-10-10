@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
@@ -116,10 +117,12 @@ public class GameScreen extends SerpScreen {
 	public void render(float delta) {
 		Gdx.app.log("GameScreen", "render()ing");
 		
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClearColor(0, 0, 0f, 1);
 	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		spriteBatch.begin();
+		shaperenderer.begin(ShapeType.Line);
+		
 		spriteBatch.draw(background, 0, 0, width, height);
 
 		drawWorld(world);
@@ -141,8 +144,11 @@ public class GameScreen extends SerpScreen {
 			drawGameOverUI();
 		}
 		
-		drawText(score, (int)width / 2 - score.length()*20 / 2, 10);
+		drawText(score, (int)width / 2 - score.length()*10, 10);
+		
+		shaperenderer.end();
 		spriteBatch.end();
+
 		Gdx.app.log("GameScreen", "ended render()");
 	}
 	@Override
@@ -151,8 +157,8 @@ public class GameScreen extends SerpScreen {
 		if (state == GameState.Running)
 			state = GameState.Paused;
 		
-		if (world.gameOver){
-			Settings.addScore(world.score);
+		if (world.isGameOver()){
+			Settings.addScore(world.getScore());
 			
 		}
 	}
@@ -160,6 +166,7 @@ public class GameScreen extends SerpScreen {
 	public void dispose() {
 		Gdx.app.log("GameScreen", "dispose()ing");
 		spriteBatch.dispose();
+		shaperenderer.dispose();
 	}
 	@Override
 	public void resize(int width, int height) {
@@ -226,9 +233,9 @@ public class GameScreen extends SerpScreen {
 
 	private void drawWorld(World world){
 		
-		Snake snake = world.snake;
+		Snake snake = world.getSnake();
 		SnakePart head = snake.parts.get(0);
-		Stain stain = world.stain;
+		Stain stain = world.getStain();
 		
 		Texture stainPixmap = null;
 		if (stain.type == Stain.TYPE_1)
@@ -239,14 +246,14 @@ public class GameScreen extends SerpScreen {
 			stainPixmap = stain3;
 		int x = stain.x * 32;
 		int y = stain.y * 32;
-		spriteBatch.draw(stainPixmap, x, y);
+		spriteBatch.draw(stainPixmap, x*ppuX, y*ppuY, 32*ppuX, 32*ppuY);
 		
 		int len = snake.parts.size();
 		for (int i = 1; i < len; i++){
 			SnakePart part = snake.parts.get(i);
 			x = part.x * 32;
 			y = part.y * 32;
-			spriteBatch.draw(tail, x, y);
+			spriteBatch.draw(tail, x*ppuX, y*ppuY, 32*ppuX, 32*ppuY);
 		}
 		
 		Texture headPixmap = null;
@@ -260,8 +267,9 @@ public class GameScreen extends SerpScreen {
 			headPixmap = headright;
 		x = head.x * 32 + 16;
 		y = head.y * 32 + 16;
-		spriteBatch.draw(headPixmap, x - headPixmap.getWidth() / 2, 
-				y - headPixmap.getHeight() /2);
+		if (headPixmap != null)
+			spriteBatch.draw(headPixmap, x*ppuX - (headPixmap.getWidth() / 2)*ppuX, 
+				y*ppuY - (headPixmap.getHeight() /2)*ppuY);
 	}
 	/*
 	 * state.ready
@@ -279,31 +287,30 @@ public class GameScreen extends SerpScreen {
 	 * state.Running
 	 */
 	private void inputRunning(float deltaTime) {
-		
+		Snake snake = world.getSnake();
 		if ((Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT))){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-			if (inBounds(touchPos, 64, 64, 64, 64)) {
+			if (inBounds(touchPos, 0, 0, 64*ppuX, 64*ppuY)) {
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
 				state = GameState.Paused;
 				return;
-			} else if (inBounds(touchPos, 64, 416, 64,64)){
-				world.snake.turnLeft();
-			} else if (inBounds(touchPos, 256, 416, 64,64)){
-				world.snake.turnRight();
+			} else if (inBounds(touchPos, 0, height-64*ppuY, 64*ppuX, 64*ppuY)){
+				snake.turnLeft();
+			} else if (inBounds(touchPos, width-64*ppuX, height-64*ppuY, 64*ppuX, 64*ppuY)){
+				snake.turnRight();
 			}
 		}
 			
 		world.update(deltaTime);
-		if (world.gameOver) {
+		if (world.isGameOver()) {
 			if (settings.getBoolean("soundOn"))
 				bitten.play(1);
 			state = GameState.GameOver;
 		}
-		if (oldScore != world.score) {
-			oldScore = world.score;
+		if (oldScore != world.getScore()) {
+			oldScore = world.getScore();
 			score = "" + oldScore;
 			if (settings.getBoolean("soundOn"))
 				eat.play(1);
@@ -312,12 +319,12 @@ public class GameScreen extends SerpScreen {
 	private void drawRunningUI() {
 				
 		spriteBatch.draw(buttons, 0, height-64*ppuY, 64*ppuX, 64*ppuY,
-				64, 128, 64, 64, false, false);
+				64, 128, 64, 64, false, false); // pause button
 		shaperenderer.line(0, 52*ppuY, width, 52*ppuY);
 		spriteBatch.draw(buttons, 0, 0, 64*ppuX, 64*ppuY,
-				64, 64, 64, 64, false, false);
+				64, 64, 64, 64, false, false); // turn left button
 		spriteBatch.draw(buttons, width -64*ppuX, 0, 64*ppuX, 64*ppuY,
-				0, 64, 64, 64, false, false);
+				0, 64, 64, 64, false, false);  // turn right button
 	}
 	/*
 	 * state.paused
@@ -326,13 +333,12 @@ public class GameScreen extends SerpScreen {
 		if ((Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT))){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-			if (inBounds(touchPos, 80, 100, 160, 48)) {
+			if (inBounds(touchPos, width/2 - 80*ppuX, height/2 - 48*ppuY, 160*ppuX, 48*ppuY)) {
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
 				state = GameState.Running;
 				return;
-			} else if (inBounds(touchPos, 80, 149, 160, 48)){
+			} else if (inBounds(touchPos, width/2 - 80*ppuX, height/2, 160*ppuX, 48*ppuY)){
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
 				game.setScreen(new MainMenuScreen(game, assets));
@@ -342,7 +348,7 @@ public class GameScreen extends SerpScreen {
 	}
 	private void drawPausedUI() {
 		
-		spriteBatch.draw(pause, width/2 - 80*ppuX, height/2 - 48*ppuY, 225*ppuX, 96*ppuY);
+		spriteBatch.draw(pause, width/2 - 80*ppuX, height/2 - 48*ppuY, 160*ppuX, 96*ppuY);
 		shaperenderer.line(0, 52*ppuY, width, 52*ppuY);
 	}
 	/*
@@ -352,18 +358,17 @@ public class GameScreen extends SerpScreen {
 		if ((Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT))){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-			if (inBounds(touchPos, 128, 200, 64, 64)) {
+			if (inBounds(touchPos, width/2 -32*ppuX, (height/3)*2 -32*ppuY, 64*ppuX, 64*ppuY)) {
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				game.setScreen(new MainMenuScreen(game, assets));
+				game.setScreen(new MainMenuScreen(game));
 				return;
 			}
 		}
 	}
 	private void drawGameOverUI() {
 		
-		spriteBatch.draw(gameover, width/2 - 112, (height/3)*2 - 48, 196*ppuX, 50*ppuY);
+		spriteBatch.draw(gameover, width/2 - 98*ppuX, (height/3)*2 - 25*ppuY, 196*ppuX, 50*ppuY);
 		spriteBatch.draw(buttons, width/2 - 32*ppuX, height/3 -32*ppuY, 64*ppuX, 64*ppuY,
 				0, 128, 64, 64, false, false);
 		shaperenderer.line(0, 52*ppuY, width, 52*ppuY);

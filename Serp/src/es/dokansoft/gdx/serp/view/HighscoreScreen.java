@@ -160,7 +160,7 @@ public class HighscoreScreen extends SerpScreen {
 		int[] hs = { 100, 80, 50, 30, 10 };
 		for (i = 0; i<5; i++){
 			lines[i] = ""+highscores.getInteger(""+i, hs[i]);
-			Gdx.app.error("HighscoreScreen", "setLines(), lines[i]: "+lines[i]);
+			Gdx.app.log("HighscoreScreen", "setLines(), lines[i]: "+lines[i]);
 		}
 	}
 	

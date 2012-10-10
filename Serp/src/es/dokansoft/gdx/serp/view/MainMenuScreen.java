@@ -136,7 +136,7 @@ public class MainMenuScreen extends SerpScreen {
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
 				Gdx.app.log("MainMenuScreen", "inputController(), not going to GameScreen");
-				//game.setScreen(new GameScreen(game,assets));
+				game.setScreen(new GameScreen(game,assets));
 				return;
 			}
 			if (inBounds(touchPos, 64*ppuX, 262*ppuY, 192*ppuX, 42*ppuY)) { // y = 220 + 42 = 262
