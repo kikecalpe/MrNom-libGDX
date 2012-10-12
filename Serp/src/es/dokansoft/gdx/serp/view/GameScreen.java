@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -74,7 +75,9 @@ public class GameScreen extends SerpScreen {
 		world = new World();
 		
 		spriteBatch = new SpriteBatch();
+		
 		shaperenderer = new ShapeRenderer();
+		shaperenderer.setColor(Color.BLACK);
 		
 		settings = Settings.settings;
 		highscores = Settings.highscores;
@@ -104,7 +107,9 @@ public class GameScreen extends SerpScreen {
 		world = new World();
 
 		spriteBatch = new SpriteBatch();
+		
 		shaperenderer = new ShapeRenderer();
+		shaperenderer.setColor(Color.BLACK);
 		
 		settings = Settings.settings;
 		highscores = Settings.highscores;
@@ -121,7 +126,6 @@ public class GameScreen extends SerpScreen {
 	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		spriteBatch.begin();
-		shaperenderer.begin(ShapeType.Line);
 		
 		spriteBatch.draw(background, 0, 0, width, height);
 
@@ -143,10 +147,12 @@ public class GameScreen extends SerpScreen {
 			inputGameOver();
 			drawGameOverUI();
 		}
-		//drawText(score, ((int)width / 2 - score.length()*10), 10);
+		drawText(score, ((int)width / 2 - score.length()*10), 10);
 		
-		shaperenderer.end();
 		spriteBatch.end();
+		shaperenderer.begin(ShapeType.Line);
+		shaperenderer.line(0, 64*ppuY, width, 64*ppuY);
+		shaperenderer.end();
 
 		Gdx.app.log("GameScreen", "ended render()");
 	}
@@ -165,7 +171,7 @@ public class GameScreen extends SerpScreen {
 	public void dispose() {
 		Gdx.app.log("GameScreen", "dispose()ing");
 		spriteBatch.dispose();
-		shaperenderer.dispose();
+		//shaperenderer.dispose();
 	}
 	@Override
 	public void resize(int width, int height) {
@@ -221,9 +227,6 @@ public class GameScreen extends SerpScreen {
                 srcWidth = 20;
             }
     
-            /*spriteBatch.draw(numbers, x*ppuX, y*ppuY, srcWidth/2, 16, srcWidth*ppuX, 32*ppuY, 
-            		0, 0, 0, srcX, 0, srcWidth, 32, false, false);
-            spriteBatch.draw(numbers, x, y, srcX, 0, srcWidth, 32);*/
             spriteBatch.draw(numbers, x*ppuX, y*ppuY, srcWidth*ppuX, 32*ppuY, 
             		srcX, 0, srcWidth, 32, false, false);
             x += srcWidth;
@@ -266,8 +269,9 @@ public class GameScreen extends SerpScreen {
 			headPixmap = headright;
 		x = head.x * 32 + 16;
 		y = head.y * 32 + 16;
-		if (headPixmap != null)
-			spriteBatch.draw(headPixmap, x*ppuX - (headPixmap.getWidth() / 2)*ppuX, 
+		if (headPixmap == null)
+			Gdx.app.error("GameScreen", "drawWorld(), headPixmap == null");
+		spriteBatch.draw(headPixmap, x*ppuX - (headPixmap.getWidth() / 2)*ppuX, 
 				y*ppuY - (headPixmap.getHeight() /2)*ppuY, 42*ppuX, 42*ppuY);
 	}
 	/*
@@ -280,7 +284,6 @@ public class GameScreen extends SerpScreen {
 	private void drawReadyUI() {
 				
 		spriteBatch.draw(ready, width/2 - 112*ppuX, height/2 - 48*ppuY, 225*ppuX, 96*ppuY);
-		shaperenderer.line(0, 64*ppuY, width, 64*ppuY);
 	}
 	/*
 	 * state.Running
@@ -316,14 +319,15 @@ public class GameScreen extends SerpScreen {
 		}
 	}
 	private void drawRunningUI() {
-				
+		// pause button
 		spriteBatch.draw(buttons, 0, height-64*ppuY, 64*ppuX, 64*ppuY,
-				64, 128, 64, 64, false, false); // pause button
-		shaperenderer.line(0, 64*ppuY, width, 64*ppuY);
+				64, 128, 64, 64, false, false);
+		// turn left button
 		spriteBatch.draw(buttons, 0, 0, 64*ppuX, 64*ppuY,
-				64, 64, 64, 64, false, false); // turn left button
+				64, 64, 64, 64, false, false); 
+		// turn right button
 		spriteBatch.draw(buttons, width -64*ppuX, 0, 64*ppuX, 64*ppuY,
-				0, 64, 64, 64, false, false);  // turn right button
+				0, 64, 64, 64, false, false);  
 	}
 	/*
 	 * state.paused
@@ -348,7 +352,6 @@ public class GameScreen extends SerpScreen {
 	private void drawPausedUI() {
 		
 		spriteBatch.draw(pause, width/2 - 80*ppuX, height/2 - 48*ppuY, 160*ppuX, 96*ppuY);
-		shaperenderer.line(0, 64*ppuY, width, 64*ppuY);
 	}
 	/*
 	 * state.GameOver
@@ -370,7 +373,6 @@ public class GameScreen extends SerpScreen {
 		spriteBatch.draw(gameover, width/2 - 98*ppuX, (height/3)*2 - 25*ppuY, 196*ppuX, 50*ppuY);
 		spriteBatch.draw(buttons, width/2 - 32*ppuX, height/3 -32*ppuY, 64*ppuX, 64*ppuY,
 				0, 128, 64, 64, false, false);
-		shaperenderer.line(0, 64*ppuY, width, 64*ppuY);
 	}
 	
 }
