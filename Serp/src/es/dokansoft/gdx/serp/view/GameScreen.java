@@ -171,7 +171,7 @@ public class GameScreen extends SerpScreen {
 	public void dispose() {
 		Gdx.app.log("GameScreen", "dispose()ing");
 		spriteBatch.dispose();
-		//shaperenderer.dispose();
+		shaperenderer.dispose();
 	}
 	@Override
 	public void resize(int width, int height) {
@@ -278,7 +278,7 @@ public class GameScreen extends SerpScreen {
 	 * state.ready
 	 */
 	private void inputReady() {
-		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+		if (Gdx.input.justTouched())
 			state = GameState.Running;
 	}
 	private void drawReadyUI() {
@@ -290,7 +290,7 @@ public class GameScreen extends SerpScreen {
 	 */
 	private void inputRunning(float deltaTime) {
 		Snake snake = world.getSnake();
-		if ((Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT))){
+		if ((Gdx.input.justTouched())){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			if (inBounds(touchPos, 0, 0, 64*ppuX, 64*ppuY)) {
@@ -333,7 +333,7 @@ public class GameScreen extends SerpScreen {
 	 * state.paused
 	 */
 	private void inputPaused() {
-		if ((Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT))){
+		if ((Gdx.input.justTouched())){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			if (inBounds(touchPos, width/2 - 80*ppuX, height/2 - 48*ppuY, 160*ppuX, 48*ppuY)) {
@@ -357,7 +357,7 @@ public class GameScreen extends SerpScreen {
 	 * state.GameOver
 	 */
 	private void inputGameOver() {
-		if ((Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT))){
+		if ((Gdx.input.justTouched())){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			if (inBounds(touchPos, width/2 -32*ppuX, (height/3)*2 -32*ppuY, 64*ppuX, 64*ppuY)) {

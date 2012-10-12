@@ -79,7 +79,7 @@ public class HelpScreen3 extends SerpScreen {
 	}
 	
 	public void inputController() {
-		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+		if (Gdx.input.justTouched()){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			if (inBounds(touchPos, 256*ppuX, 416*ppuY, 64*ppuX, 64*ppuY)){
