@@ -5,7 +5,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
 import es.dokansoft.gdx.serp.view.LoadingScreen;
-import es.dokansoft.gdx.serp.view.MenuScreen;
 
 public class SerpGame extends Game {
 

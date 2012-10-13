@@ -11,7 +11,7 @@ import es.dokansoft.gdx.serp.model.Settings;
 public class MenuScreen extends SerpScreen {
 	
 	SpriteBatch spritebatch;
-	Preferences settings = Settings.settings;
+	Preferences settings = Settings.serpSettings;
 
 	public MenuScreen(Game game) {
 		super(game);

@@ -2,43 +2,40 @@ package es.dokansoft.gdx.serp.view;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
+import es.dokansoft.gdx.serp.model.Settings;
+
 public class LoadingScreen extends SerpScreen {
-	
+	Game game;
+	Preferences settings = Settings.serpSettings;
+	Preferences highscores = Settings.serpHighscores;
 	public AssetManager assets = new AssetManager();
 	
 	public LoadingScreen(Game game) {
 		super(game);
 		Gdx.app.log("LoadingScreen", "Constructor: job done!");
-	}
-	
-	@Override
-	public void render(float delta) {
-		Gdx.app.log("LoadingScreen", "starting render()");
-		
-		game.setScreen(new MainMenuScreen(game));
-		
-		Gdx.app.log("LoadingScreen", "ended render()");
-	}
 
-	@Override
-	public void resize(int width, int height) {
-		Gdx.app.log("LoadingScreen", "resize()ing");
-	}
-
-
-	public void show(){
-		Gdx.app.log("LoadingScreen", "show()ing");
-		
+		this.game = game;
 		loadGameAssets();
+		loadSettings();
+		loadHighscores();
 
-		//Settings.load(game.getFileIO());
-		Gdx.app.log("LoadingScreen", "finished show()ing");
+	}
+	public LoadingScreen(Game game, AssetManager assets){
+		super(game, assets);
+		this.game = game;
+		loadAssetManager();
+		loadSettings();
+		loadHighscores();
 	}
 	
+	/*
+	 * two way assets loading
+	 */
 	public void loadGameAssets() {
 		Assets.background = new Texture(Gdx.files.internal("background.png"));
 		Assets.logo = new Texture(Gdx.files.internal("logo.png"));
@@ -64,7 +61,6 @@ public class LoadingScreen extends SerpScreen {
 		Assets.eat = Gdx.audio.newSound(Gdx.files.internal("eat.ogg"));
 		Assets.bitten = Gdx.audio.newSound(Gdx.files.internal("bitten.ogg"));
     }
-	
 	private void loadAssetManager() {
 		// Using assets as an AssetManager
 		Gdx.app.log("LoadingScreen", "starting loadGameAssets()");
@@ -94,31 +90,67 @@ public class LoadingScreen extends SerpScreen {
 		Gdx.app.log("LoadingScreen", "ended loadGameAssets()");
 	}
 
+	/*
+	 * Load Settings and Highscores
+	 */
+	public void loadSettings(){
+		Gdx.app.error("LoadingScreen", "loadSettings(), soundOn: "+
+				settings.getBoolean("soundOn"));
+		settings.getBoolean("soundOn", true);
+		settings.flush();
+	}
+	public void loadHighscores(){
+		Gdx.app.error("LoadingScreen", "loadHighscores(), serpHighscore.0: "+
+				highscores.getInteger(""+0));
+		if (highscores.getInteger(""+0) == 0){
+			int[] hs = { 100, 80, 50, 30, 10 };
+			
+			for (int i = 0; i< hs.length; i++){
+				highscores.putInteger(""+i, hs[i]);
+			}
+			highscores.flush();
+		}
+	}
+	/*
+	 * Screen methods
+	 */
+	@Override
+	public void render(float delta) {
+		Gdx.app.log("LoadingScreen", "starting render()");
+		
+		game.setScreen(new MainMenuScreen(game));
+		
+		Gdx.app.log("LoadingScreen", "ended render()");
+	}
+	@Override
+	public void resize(int width, int height) {
+		Gdx.app.log("LoadingScreen", "resize()ing");
+	}
+	public void show(){
+		Gdx.app.log("LoadingScreen", "show()ing");
+		
+		//Settings.load(game.getFileIO());
+		Gdx.app.log("LoadingScreen", "finished show()ing");
+	}
 	@Override
 	public void hide() {
 		Gdx.app.log("LoadingScreen", "hide()ing");
 	}
-
 	@Override
 	public void pause() {
 		Gdx.app.log("LoadingScreen", "pause()ing");
 	}
-
 	@Override
 	public void resume() {
 		Gdx.app.log("LoadingScreen", "resume()ing");
 	}
-
 	@Override
 	public void dispose() {
 		Gdx.app.log("LoadingScreen", "dispose()ing");
 		//assets.dispose();
 	}
-
 	@Override
 	public void drawText(String line, int x, int y) {
 		Gdx.app.log("LoadingScreen", "drawText()");
 	}
-
-
 }

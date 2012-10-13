@@ -2,14 +2,11 @@ package es.dokansoft.gdx.serp.view;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -79,8 +76,8 @@ public class GameScreen extends SerpScreen {
 		shaperenderer = new ShapeRenderer();
 		shaperenderer.setColor(Color.BLACK);
 		
-		settings = Settings.settings;
-		highscores = Settings.highscores;
+		settings = Settings.serpSettings;
+		highscores = Settings.serpHighscores;
 		
 		background = Assets.background;
 		ready = Assets.ready;
@@ -111,8 +108,8 @@ public class GameScreen extends SerpScreen {
 		shaperenderer = new ShapeRenderer();
 		shaperenderer.setColor(Color.BLACK);
 		
-		settings = Settings.settings;
-		highscores = Settings.highscores;
+		settings = Settings.serpSettings;
+		highscores = Settings.serpHighscores;
 	}
 
 	/*
@@ -161,11 +158,6 @@ public class GameScreen extends SerpScreen {
 		Gdx.app.log("GameScreen", "pause()ing");
 		if (state == GameState.Running)
 			state = GameState.Paused;
-		
-		if (world.isGameOver()){
-			Settings.addScore(world.getScore());
-			
-		}
 	}
 	@Override
 	public void dispose() {
@@ -310,6 +302,8 @@ public class GameScreen extends SerpScreen {
 			if (settings.getBoolean("soundOn"))
 				bitten.play(1);
 			state = GameState.GameOver;
+			if (highscores.getInteger("4")< world.getScore())
+				Settings.addScore(world.getScore());
 		}
 		if (oldScore != world.getScore()) {
 			oldScore = world.getScore();

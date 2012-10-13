@@ -50,7 +50,7 @@ public class MainMenuScreen extends SerpScreen {
 		buttons = Assets.buttons;
 		click = Assets.click;
 		
-		settings = Settings.settings;
+		settings = Settings.serpSettings;
 		
 		Gdx.app.log("MainMenuScreen", "Constructor: job done!");
 	}
@@ -75,7 +75,7 @@ public class MainMenuScreen extends SerpScreen {
 		buttons = assets.get("buttons.png", Texture.class);
 		click = assets.get("click.ogg", Sound.class);*/
 		
-		settings = Settings.settings;
+		settings = Settings.serpSettings;
 		
 		Gdx.app.log("MainMenuScreen", "Constructor: job done!");
 	}
@@ -108,7 +108,6 @@ public class MainMenuScreen extends SerpScreen {
 	}
 
 	private void inputController(){
-		// TODO Reescribir con inputAdapter().touchUp() ??????
 		Gdx.app.log("MainMenuScreen", "inputController(), starting to process input");
 
 		if (Gdx.input.justTouched()){
@@ -119,15 +118,17 @@ public class MainMenuScreen extends SerpScreen {
 			Gdx.app.log("MainMenuScreen", "inputController(), touchPos = " +
 					touchPos.toString());
 			if (inBounds(touchPos, 0, 416*ppuY, 64*ppuX, 64*ppuY)){
-				Gdx.app.log("MainMenuScreen", "inputController(),  sound button pressed...");
+				Gdx.app.error("MainMenuScreen", "inputController(),  sound button pressed...");
 				if (!settings.getBoolean("soundOn")){
-					Gdx.app.log("MainMenuScreen", "inputController(), ... sound enabled");
+					Gdx.app.error("MainMenuScreen", "inputController(), ... sound enabled");
 					settings.putBoolean("soundOn", true);
+					settings.flush();
 					click.play(1);
 					return;
 				} else {
-					Gdx.app.log("MainMenuScreen", "inputController(), ...sound disabled");
+					Gdx.app.error("MainMenuScreen", "inputController(), ...sound disabled");
 					settings.putBoolean("soundOn",false);
+					settings.flush();
 					return;
 				}
 			}

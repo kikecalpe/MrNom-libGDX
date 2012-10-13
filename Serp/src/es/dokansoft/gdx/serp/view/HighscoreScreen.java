@@ -2,12 +2,10 @@ package es.dokansoft.gdx.serp.view;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
@@ -45,8 +43,8 @@ public class HighscoreScreen extends SerpScreen {
 		
 		spriteBatch = new SpriteBatch();
 
-		settings = Settings.settings;
-		highscores = Settings.highscores;
+		settings = Settings.serpSettings;
+		highscores = Settings.serpHighscores;
 		
 		background = Assets.background;
 		mainMenu = Assets.mainMenu;
@@ -60,8 +58,8 @@ public class HighscoreScreen extends SerpScreen {
 	public HighscoreScreen(Game game, AssetManager assets) {
 		super(game,assets);
 
-		settings = Settings.settings;
-		highscores = Settings.highscores;
+		settings = Settings.serpSettings;
+		highscores = Settings.serpHighscores;
 		
 		background = assets.get("background.png", Texture.class);
 		numbers = assets.get("numbers.png", Texture.class);
@@ -156,11 +154,9 @@ public class HighscoreScreen extends SerpScreen {
 		}
 	}
 	private void setLines(){
-		int i;
-		int[] hs = { 100, 80, 50, 30, 10 };
-		for (i = 0; i<5; i++){
-			lines[i] = ""+highscores.getInteger(""+i, hs[i]);
-			Gdx.app.log("HighscoreScreen", "setLines(), lines[i]: "+lines[i]);
+
+		for (int i = 0; i<5; i++){
+			lines[i] = ""+highscores.getInteger(""+i);
 		}
 	}
 	

@@ -68,7 +68,7 @@ public class TestMenuScreen extends SerpScreen{
 		
 		click = assets.get("click.ogg", Sound.class);
 		
-		settings = Settings.settings;	
+		settings = Settings.serpSettings;	
 		
 		Gdx.app.log("TestMenuScreen", "Constructor: job done!");
 	}
