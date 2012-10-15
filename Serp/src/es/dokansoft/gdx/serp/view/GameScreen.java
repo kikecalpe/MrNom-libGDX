@@ -144,7 +144,7 @@ public class GameScreen extends SerpScreen {
 			inputGameOver();
 			drawGameOverUI();
 		}
-		drawText(score, ((int)width / 2 - score.length()*10), 10);
+		drawText(score, ((int)vwidth / 2 - score.length()*10), 10);
 		
 		spriteBatch.end();
 		shaperenderer.begin(ShapeType.Line);

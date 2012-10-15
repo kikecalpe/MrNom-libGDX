@@ -94,13 +94,13 @@ public class LoadingScreen extends SerpScreen {
 	 * Load Settings and Highscores
 	 */
 	public void loadSettings(){
-		Gdx.app.error("LoadingScreen", "loadSettings(), soundOn: "+
+		Gdx.app.log("LoadingScreen", "loadSettings(), soundOn: "+
 				settings.getBoolean("soundOn"));
 		settings.getBoolean("soundOn", true);
 		settings.flush();
 	}
 	public void loadHighscores(){
-		Gdx.app.error("LoadingScreen", "loadHighscores(), serpHighscore.0: "+
+		Gdx.app.log("LoadingScreen", "loadHighscores(), serpHighscore.0: "+
 				highscores.getInteger(""+0));
 		if (highscores.getInteger(""+0) == 0){
 			int[] hs = { 100, 80, 50, 30, 10 };

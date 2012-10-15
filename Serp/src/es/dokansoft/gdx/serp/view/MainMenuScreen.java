@@ -118,15 +118,15 @@ public class MainMenuScreen extends SerpScreen {
 			Gdx.app.log("MainMenuScreen", "inputController(), touchPos = " +
 					touchPos.toString());
 			if (inBounds(touchPos, 0, 416*ppuY, 64*ppuX, 64*ppuY)){
-				Gdx.app.error("MainMenuScreen", "inputController(),  sound button pressed...");
+				Gdx.app.log("MainMenuScreen", "inputController(),  sound button pressed...");
 				if (!settings.getBoolean("soundOn")){
-					Gdx.app.error("MainMenuScreen", "inputController(), ... sound enabled");
+					Gdx.app.log("MainMenuScreen", "inputController(), ... sound enabled");
 					settings.putBoolean("soundOn", true);
 					settings.flush();
 					click.play(1);
 					return;
 				} else {
-					Gdx.app.error("MainMenuScreen", "inputController(), ...sound disabled");
+					Gdx.app.log("MainMenuScreen", "inputController(), ...sound disabled");
 					settings.putBoolean("soundOn",false);
 					settings.flush();
 					return;
