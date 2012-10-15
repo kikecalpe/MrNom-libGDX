@@ -338,7 +338,7 @@ public class GameScreen extends SerpScreen {
 			} else if (inBounds(touchPos, width/2 - 80*ppuX, height/2, 160*ppuX, 48*ppuY)){
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				game.setScreen(new MainMenuScreen(game, assets));
+				game.setScreen(new MainMenuScreen(game));
 				return;
 			}
 		}

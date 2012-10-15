@@ -7,8 +7,8 @@ public class World {
 	static final int WORLD_WIDTH = 10;
 	static final int WORLD_HEIGHT = 15;
 	static final int SCORE_INCREMENT = 10;
-	static final float TICK_INITIAL = 0.4f;
-	static final float TICK_DECREMENT = 0.15f;
+	static final float TICK_INITIAL = 0.5f;
+	static final float TICK_DECREMENT = 0.05f;
 	
 	private Snake snake;
 	private Stain stain;
@@ -81,7 +81,7 @@ public class World {
 					placeStain();
 				}
 				
-				if (score % 40 == 0 && tick - TICK_DECREMENT > 0) {
+				if (score % 50 == 0 && tick - TICK_DECREMENT > 0) {
 					tick -= TICK_DECREMENT;
 				}
 			}
