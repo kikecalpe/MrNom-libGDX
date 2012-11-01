@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import es.dokansoft.gdx.serp.model.Settings;
@@ -19,24 +18,19 @@ public class HelpScreen3 extends SerpScreen {
 	private float ppuX;	// pixels per unit on the X axis
 	private float ppuY;	// pixels per unit on the Y axis
 	float width, height = 0;
-	Matrix4 matrix;
 
-	Game game;
 	SpriteBatch spriteBatch;
 
 	Preferences settings;
 		
 	Texture background;
-	Texture mainMenu;
-	Texture numbers;
 	Texture buttons;
 	Texture help3;
 	Sound click;
 
 	public HelpScreen3(Game game) {
 		super(game);
-		
-		this.game = game;
+		Gdx.app.error("HelpScreen3", "Constructor: super(game) job done!");
 		
 		spriteBatch = new SpriteBatch();
 
@@ -50,7 +44,10 @@ public class HelpScreen3 extends SerpScreen {
 	}
 	public HelpScreen3(Game game, AssetManager assets) {
 		super(game,assets);
+		Gdx.app.error("HelpScreen3", "Constructor: super(game,assets) job done!");
 		
+		spriteBatch = new SpriteBatch();
+
 		settings = Settings.serpSettings;
 		
 		background = assets.get("background.png", Texture.class);
@@ -83,7 +80,10 @@ public class HelpScreen3 extends SerpScreen {
 			if (inBounds(touchPos, 256*ppuX, 416*ppuY, 64*ppuX, 64*ppuY)){
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				game.setScreen(new MainMenuScreen(game));
+				if (this.assets == null)
+					game.setScreen(new MainMenuScreen(game));
+				if (this.assets != null)
+					game.setScreen(new MainMenuScreen(game,assets));
 				return;
 			}
 		}
@@ -117,8 +117,8 @@ public class HelpScreen3 extends SerpScreen {
 		Gdx.app.log("Stress", "resize().ppuX: "+ppuX);
 		ppuY = (float)height / vheight;
 		Gdx.app.log("Stress", "resize().ppuY: "+ppuY);
-		matrix = spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 		
+		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import es.dokansoft.gdx.serp.model.Settings;
@@ -19,9 +18,7 @@ public class HighscoreScreen extends SerpScreen {
 	private float ppuX;	// pixels per unit on the X axis
 	private float ppuY;	// pixels per unit on the Y axis
 	float width, height = 0;
-	Matrix4 matrix;
 
-	Game game;
 	SpriteBatch spriteBatch;
 
 	String lines[] = new String[5];
@@ -38,8 +35,7 @@ public class HighscoreScreen extends SerpScreen {
 
 	public HighscoreScreen(Game game) {
 		super(game);
-		
-		this.game = game;
+		Gdx.app.error("HighscoreScreen", "Constructor: super(game) job done!");
 		
 		spriteBatch = new SpriteBatch();
 
@@ -57,19 +53,24 @@ public class HighscoreScreen extends SerpScreen {
 	}
 	public HighscoreScreen(Game game, AssetManager assets) {
 		super(game,assets);
+		Gdx.app.error("HighscoreScreen", "Constructor: super(game,assets) job done!");
+		
+		spriteBatch = new SpriteBatch();
 
 		settings = Settings.serpSettings;
 		highscores = Settings.serpHighscores;
 		
 		background = assets.get("background.png", Texture.class);
+		mainMenu = assets.get("mainmenu.png", Texture.class);
 		numbers = assets.get("numbers.png", Texture.class);
 		buttons = assets.get("buttons.png", Texture.class);
 
 		click = assets.get("click.ogg", Sound.class);
 
+		setLines();/*
 		for (int i = 0; i<5; i++) {
 			lines[i] = ""+ (i + 1) + ". " + highscores.getInteger("" +i);
-		}
+		}*/
 	}
 
 	@Override
@@ -104,7 +105,8 @@ public class HighscoreScreen extends SerpScreen {
 		Gdx.app.log("Stress", "resize().ppuX: "+ppuX);
 		ppuY = (float)height / vheight;
 		Gdx.app.log("Stress", "resize().ppuY: "+ppuY);
-		matrix = spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+		
+		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 	}
 
 	@Override
@@ -148,7 +150,10 @@ public class HighscoreScreen extends SerpScreen {
 			if (inBounds(touchPos, 256*ppuX, 416*ppuY, 64*ppuX, 64*ppuY)){
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				game.setScreen(new MainMenuScreen(game));
+				if (this.assets == null)
+					game.setScreen(new MainMenuScreen(game));
+				if (this.assets != null)
+					game.setScreen(new MainMenuScreen(game,assets));
 				return;
 			}
 		}

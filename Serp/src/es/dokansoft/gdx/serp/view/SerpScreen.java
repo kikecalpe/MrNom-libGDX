@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 public abstract class SerpScreen implements Screen{
 	
 	Game game;
-	AssetManager assets = new AssetManager();
+	AssetManager assets;
 	
 	
 	public SerpScreen (Game game) {

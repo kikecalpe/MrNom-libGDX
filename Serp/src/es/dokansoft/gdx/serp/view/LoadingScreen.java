@@ -10,10 +10,9 @@ import com.badlogic.gdx.graphics.Texture;
 import es.dokansoft.gdx.serp.model.Settings;
 
 public class LoadingScreen extends SerpScreen {
-	Game game;
+
 	Preferences settings = Settings.serpSettings;
 	Preferences highscores = Settings.serpHighscores;
-	public AssetManager assets = new AssetManager();
 	
 	public LoadingScreen(Game game) {
 		super(game);
@@ -27,8 +26,12 @@ public class LoadingScreen extends SerpScreen {
 	}
 	public LoadingScreen(Game game, AssetManager assets){
 		super(game, assets);
-		this.game = game;
+		Gdx.app.log("LoadingScreen", "Constructor: job done!");
+		Gdx.app.log("LoadingScreen", "LoadingScreen(game, assets), this.assets: "+ this.assets);
+		this.assets = new AssetManager();
+		Gdx.app.log("LoadingScreen", "LoadingScreen(game, assets), this.assets: "+ this.assets);
 		loadAssetManager();
+		Gdx.app.log("LoadingScreen", "LoadingScreen(game, assets), assets: "+ assets);
 		loadSettings();
 		loadHighscores();
 	}
@@ -87,6 +90,8 @@ public class LoadingScreen extends SerpScreen {
 		assets.load("click.ogg", Sound.class);
 		assets.load("eat.ogg", Sound.class);
 		assets.load("bitten.ogg", Sound.class);
+		
+		assets.finishLoading();
 		Gdx.app.log("LoadingScreen", "ended loadGameAssets()");
 	}
 
@@ -117,8 +122,13 @@ public class LoadingScreen extends SerpScreen {
 	@Override
 	public void render(float delta) {
 		Gdx.app.log("LoadingScreen", "starting render()");
-		
-		game.setScreen(new MainMenuScreen(game));
+		Gdx.app.log("LoadingScreen", "render(), this.assets: "+ this.assets);
+		Gdx.app.log("LoadingScreen", "render(), assets: "+ assets);
+
+		if (assets == null)
+			game.setScreen(new MainMenuScreen(game));
+		if (assets != null)
+			game.setScreen(new MainMenuScreen(game, assets));
 		
 		Gdx.app.log("LoadingScreen", "ended render()");
 	}

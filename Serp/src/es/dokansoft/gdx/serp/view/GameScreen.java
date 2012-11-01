@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import es.dokansoft.gdx.serp.model.Settings;
@@ -27,7 +26,6 @@ public class GameScreen extends SerpScreen {
 	private float ppuX;	// pixels per unit on the X axis
 	private float ppuY;	// pixels per unit on the Y axis
 	float width, height = 0;
-	Matrix4 matrix;
 
 	SpriteBatch spriteBatch;
 	ShapeRenderer shaperenderer;
@@ -68,7 +66,8 @@ public class GameScreen extends SerpScreen {
 
 	public GameScreen(Game game){
 		super(game);
-		this.game = game;
+		Gdx.app.error("GameScreen", "Constructor: super(game) job done!");
+
 		world = new World();
 		
 		spriteBatch = new SpriteBatch();
@@ -101,6 +100,8 @@ public class GameScreen extends SerpScreen {
 	}
 	public GameScreen(Game game, AssetManager assets) {
 		super(game,assets);
+		Gdx.app.error("GameScreen", "Constructor: super(game,assets) job done!");
+
 		world = new World();
 
 		spriteBatch = new SpriteBatch();
@@ -110,6 +111,25 @@ public class GameScreen extends SerpScreen {
 		
 		settings = Settings.serpSettings;
 		highscores = Settings.serpHighscores;
+
+		background = assets.get("background.png", Texture.class);
+		ready = assets.get("ready.png", Texture.class);
+		pause = assets.get("pausemenu.png", Texture.class);
+		gameover = assets.get("gameover.png", Texture.class);
+		numbers = assets.get("numbers.png", Texture.class);
+		buttons = assets.get("buttons.png", Texture.class);
+		headup = assets.get("headup.png", Texture.class);
+		headleft = assets.get("headleft.png", Texture.class);
+		headdown = assets.get("headdown.png", Texture.class);
+		headright = assets.get("headright.png", Texture.class);
+		tail = assets.get("tail.png", Texture.class);
+		stain1 = assets.get("stain1.png", Texture.class);
+		stain2 = assets.get("stain2.png", Texture.class);
+		stain3 = assets.get("stain3.png", Texture.class);
+		
+		click = assets.get("click.ogg", Sound.class);
+		eat = assets.get("eat.ogg", Sound.class);
+		bitten = assets.get("bitten.ogg", Sound.class);
 	}
 
 	/*
@@ -175,7 +195,7 @@ public class GameScreen extends SerpScreen {
 		Gdx.app.log("Stress", "resize().ppuX: "+ppuX);
 		ppuY = (float)height / vheight;
 		Gdx.app.log("Stress", "resize().ppuY: "+ppuY);
-		matrix = spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 
 	}
 	@Override
@@ -338,7 +358,10 @@ public class GameScreen extends SerpScreen {
 			} else if (inBounds(touchPos, width/2 - 80*ppuX, height/2, 160*ppuX, 48*ppuY)){
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				game.setScreen(new MainMenuScreen(game));
+				if (this.assets == null)
+					game.setScreen(new MainMenuScreen(game));
+				if (this.assets != null)
+					game.setScreen(new MainMenuScreen(game,assets));
 				return;
 			}
 		}
@@ -357,7 +380,10 @@ public class GameScreen extends SerpScreen {
 			if (inBounds(touchPos, width/2 -32*ppuX, (height/3)*2 -32*ppuY, 64*ppuX, 64*ppuY)) {
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				game.setScreen(new MainMenuScreen(game));
+				if (this.assets == null)
+					game.setScreen(new MainMenuScreen(game));
+				if (this.assets != null)
+					game.setScreen(new MainMenuScreen(game,assets));
 				return;
 			}
 		}

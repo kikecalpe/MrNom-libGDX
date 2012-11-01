@@ -9,7 +9,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import es.dokansoft.gdx.serp.model.Settings;
@@ -20,9 +19,7 @@ public class MainMenuScreen extends SerpScreen {
 	private float ppuX;	// pixels per unit on the X axis
 	private float ppuY;	// pixels per unit on the Y axis
 	float width, height = 0;
-	Matrix4 matrix;
 	
-	Game game;
 	SpriteBatch spriteBatch;
 	//InputAdapter input; // not necessary at the moment
 	
@@ -35,15 +32,15 @@ public class MainMenuScreen extends SerpScreen {
 	
 	public MainMenuScreen(Game game) {
 		super(game);
-		Gdx.app.log("MainMenuScreen", "Constructor: super() job done!");
+		Gdx.app.error("MainMenuScreen", "Constructor: super(game) job done!");
 		Gdx.app.log("MainMenuScreen", "Constructor: going forward constructing...");
-		
-		this.game = game;
+		Gdx.app.log("MainMenuScreen", "MainMenuScreen(game), this.assets: "+ this.assets);
 		
 		spriteBatch = new SpriteBatch();
 		
 		//input = new InputAdapter(); //not necessary at the moment
 		
+		// Using static assets 
 		background = Assets.background;
 		logo = Assets.logo;
 		mainMenu = Assets.mainMenu;
@@ -56,11 +53,10 @@ public class MainMenuScreen extends SerpScreen {
 	}
 	public MainMenuScreen(Game game, AssetManager assets) {
 		super(game,assets);
-		Gdx.app.log("MainMenuScreen", "Constructor: super() job done!");
+		Gdx.app.error("MainMenuScreen", "Constructor: super(game,assets) job done!");
 		Gdx.app.log("MainMenuScreen", "Constructor: going forward constructing...");
-		
-		this.game = game;
-		this.assets = assets;
+		Gdx.app.log("MainMenuScreen", "MainMenuScreen(game, assets), this.assets: "+ this.assets);
+		Gdx.app.log("MainMenuScreen", "MainMenuScreen(game, assets), assets: "+ assets);
 		
 		spriteBatch = new SpriteBatch();
 		//this line to setup projection without cameras
@@ -68,12 +64,12 @@ public class MainMenuScreen extends SerpScreen {
 		
 		//input = new InputAdapter(); //not necessary at the moment
 		
-		/* Using an AssetManager
+		// Using an AssetManager
 		background = assets.get("background.png", Texture.class);
 		logo = assets.get("logo.png", Texture.class);
 		mainMenu = assets.get("mainmenu.png", Texture.class);
 		buttons = assets.get("buttons.png", Texture.class);
-		click = assets.get("click.ogg", Sound.class);*/
+		click = assets.get("click.ogg", Sound.class);
 		
 		settings = Settings.serpSettings;
 		
@@ -136,24 +132,33 @@ public class MainMenuScreen extends SerpScreen {
 				Gdx.app.log("MainMenuScreen", "inputController(), play touched!");
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				Gdx.app.log("MainMenuScreen", "inputController(), not going to GameScreen");
-				game.setScreen(new GameScreen(game));
+				Gdx.app.log("MainMenuScreen", "inputController(), going to GameScreen");
+				if (this.assets == null)
+					game.setScreen(new GameScreen(game));
+				if (this.assets != null)
+					game.setScreen(new GameScreen(game,assets));
 				return;
 			}
 			if (inBounds(touchPos, 64*ppuX, 262*ppuY, 192*ppuX, 42*ppuY)) { // y = 220 + 42 = 262
 				Gdx.app.log("MainMenuScreen", "inputController(), highscores touched!");
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				Gdx.app.log("MainMenuScreen", "inputController(), not going to HighscoreScreen");
-				game.setScreen(new HighscoreScreen(game));
+				Gdx.app.log("MainMenuScreen", "inputController(), going to HighscoreScreen");
+				if (this.assets == null)
+					game.setScreen(new HighscoreScreen(game));
+				if (this.assets != null)
+					game.setScreen(new HighscoreScreen(game,assets));
 				return;
 			}
 			if (inBounds(touchPos, 64*ppuX, 304*ppuY, 192*ppuX, 42*ppuY)) { // y = 262 + 42 =304
 				Gdx.app.log("MainMenuScreen", "inputController(), help touched!");
 				if (settings.getBoolean("soundOn"))
 					click.play(1);
-				Gdx.app.log("MainMenuScreen", "inputController(), not going to HelpScreen");
-				game.setScreen(new HelpScreen(game));
+				Gdx.app.log("MainMenuScreen", "inputController(), going to HelpScreen");
+				if (this.assets == null)
+					game.setScreen(new HelpScreen(game));
+				if (this.assets != null)
+					game.setScreen(new HelpScreen(game,assets));
 				return;
 			}
 		}
@@ -161,7 +166,7 @@ public class MainMenuScreen extends SerpScreen {
 			Gdx.app.log("MainMenuScreen", "inputController(), ANY_KEY pressed");
 			return;
 		}
-		//Gdx.app.log("MainMenuScreen", "inputController(), ended");
+		Gdx.app.log("MainMenuScreen", "inputController(), ended");
 	}
 
 	@Override
@@ -174,15 +179,15 @@ public class MainMenuScreen extends SerpScreen {
 		Gdx.app.log("Stress", "resize().ppuX: "+ppuX);
 		ppuY = (float)height / vheight;
 		Gdx.app.log("Stress", "resize().ppuY: "+ppuY);
-		matrix = spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 
 	    Gdx.app.log("MainMenuScreen", "ended resize()");
 	}
 	@Override
 	public void dispose() {
 		Gdx.app.log("MainMenuScreen", "dispose()ing");
-		//spriteBatch.dispose();
-		//assets.dispose();
+		spriteBatch.dispose();
+		assets.dispose();
 		Gdx.app.log("MainMenuScreen", "ended dispose()");
 	}
 	public void drawText(String line, int x, int y){
