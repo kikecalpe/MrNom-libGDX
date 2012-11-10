@@ -1,0 +1,11 @@
+*.log
+*.cache
+*.class
+*.dex
+*.ap_
+*.apk
+.metadata/
+Serp-android/bin/
+Serp-desktop/bin/
+Serp/bin/
+
