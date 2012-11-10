@@ -59,6 +59,7 @@ public class LoadingScreen extends SerpScreen {
 		Assets.stain1 = new Texture(Gdx.files.internal("stain1.png"));
 		Assets.stain2 = new Texture(Gdx.files.internal("stain2.png"));
 		Assets.stain3 = new Texture(Gdx.files.internal("stain3.png"));
+		Assets.poo = new Texture(Gdx.files.internal("poo.png"));
 	    
 		Assets.click = Gdx.audio.newSound(Gdx.files.internal("click.ogg"));
 		Assets.eat = Gdx.audio.newSound(Gdx.files.internal("eat.ogg"));
@@ -86,6 +87,7 @@ public class LoadingScreen extends SerpScreen {
 		assets.load("stain1.png", Texture.class);
 		assets.load("stain2.png", Texture.class);
 		assets.load("stain3.png", Texture.class);
+		assets.load("poo.png", Texture.class);
 
 		assets.load("click.ogg", Sound.class);
 		assets.load("eat.ogg", Sound.class);

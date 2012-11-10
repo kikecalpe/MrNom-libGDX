@@ -18,24 +18,19 @@ public class Snake {
 		parts.add(new SnakePart(5,7));
 		parts.add(new SnakePart(5,8));
 	}
-	
+	/*
+	 * Move
+	 */
 	public void turnLeft() {
 		direction += 1;
 		if (direction > RIGHT)
 			direction = UP;
 	}
-	
 	public void turnRight() {
 		direction -= 1;
 		if (direction < UP) 
 			direction = RIGHT;
 	}
-	
-	public void eat() {
-		SnakePart end = parts.get(parts.size()-1);
-		parts.add(new SnakePart(end.x,end.y));
-	}
-	
 	public void advance(){
 		SnakePart head = parts.get(0);
 		
@@ -65,7 +60,13 @@ public class Snake {
 		if (head.y > 14)
 			head.y = 2;
 	}
-	
+	/*
+	 * Others
+	 */
+	public void grow() {
+		SnakePart end = parts.get(parts.size()-1);
+		parts.add(new SnakePart(end.x,end.y));
+	}
 	public boolean checkBitten() {
 		int len = parts.size();
 		SnakePart head = parts.get(0);

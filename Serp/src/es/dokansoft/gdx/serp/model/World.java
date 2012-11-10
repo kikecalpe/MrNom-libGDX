@@ -1,5 +1,9 @@
 package es.dokansoft.gdx.serp.model;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -19,12 +23,26 @@ public class World {
 	private float tickTime = 0;
 	private static float tick;
 	
+	/*
+	 * Poo sets
+	 */
+	public List<Poo> poos = new ArrayList<Poo>();
+	private int randomPoo = 10; // poo is placed when random nº in this range is <= score 
+	
 	public World(){
 		tick = TICK_INITIAL;
 		snake = new Snake();
 		placeStain();
 	}
-	
+	/*
+	*  
+	*/
+	public void placePoo(int x, int y){
+		if (MathUtils.random(randomPoo) <= score){
+			float timer = MathUtils.random(15,30);
+			poos.add(new Poo(x,y,timer));
+		}
+	}
 	public void placeStain(){
 		for (int x=0; x < WORLD_WIDTH; x++){
 			for (int y = 2; y < WORLD_HEIGHT; y++){
@@ -36,6 +54,12 @@ public class World {
 		for (int i = 0; i < len; i++) {
 			SnakePart part = snake.parts.get(i);
 			fields[part.x][part.y] = true;
+		}
+		
+		len = poos.size();
+		for (int i = 0; i < len; i++){
+			Poo p = poos.get(i);
+			fields[p.x][p.y] = true; 
 		}
 		
 		int stainX = MathUtils.random(WORLD_WIDTH-1);
@@ -55,14 +79,23 @@ public class World {
 		}
 		stain = new Stain(stainX, stainY, MathUtils.random(2));
 	}
-	
+	/*
+	 * Updating the world
+	 */
 	public void update(float deltaTime) {
 		if (gameOver) {
 			return;
 		}
-		
+
 		tickTime += deltaTime;
-		
+		if (!poos.isEmpty()){
+			for (Iterator<Poo> it = poos.iterator(); it.hasNext();){
+				Poo p = it.next();
+				p.timer -= deltaTime;
+				if (p.timer <= 0)
+					it.remove();
+			}
+		}
 		while (tickTime > tick){
 			tickTime -= tick;
 			snake.advance();
@@ -71,24 +104,32 @@ public class World {
 				return;
 			}
 			SnakePart head = snake.parts.get(0);
-			if (head.x == stain.x && head.y == stain.y){
+			if (head.x == stain.x && head.y == stain.y){ // eats a stain
 				score += SCORE_INCREMENT;
-				snake.eat();
+				snake.grow();
 				if (snake.parts.size() == WORLD_HEIGHT * WORLD_WIDTH) {
 					gameOver = true;
 					return;
 				} else {
+					placePoo(stain.x, stain.y);
 					placeStain();
 				}
 				
 				if (score % 100 == 0 && tick - TICK_DECREMENT > 0) {
 					tick -= TICK_DECREMENT;
 				}
+			} else if (!poos.isEmpty()){
+				for (Iterator<Poo> it = poos.iterator(); it.hasNext();){
+					Poo p = it.next();
+					if (head.x == p.x && head.y == p.y){
+						score -= 100;
+						if (score < 0) score = 0;
+						it.remove();
+					}
+				}
 			}
 		}
 	}
-
-
 
 	/**
 	 * @return the snake
@@ -158,5 +199,11 @@ public class World {
 	 */
 	public static void setTick(float tick) {
 		World.tick = tick;
+	}
+	/**
+	 * @return the poos
+	 */
+	public List<Poo> getPoos() {
+		return poos;
 	}
 }

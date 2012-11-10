@@ -24,6 +24,7 @@ public class Assets {
     public static Texture stain1 = new Texture(Gdx.files.internal("stain1.png"));
     public static Texture stain2 = new Texture(Gdx.files.internal("stain2.png"));
     public static Texture stain3 = new Texture(Gdx.files.internal("stain3.png"));
+    public static Texture poo = new Texture(Gdx.files.internal("poo.png"));
     
     public static Sound click = Gdx.audio.newSound(Gdx.files.internal("click.ogg"));
     public static Sound eat = Gdx.audio.newSound(Gdx.files.internal("eat.ogg"));

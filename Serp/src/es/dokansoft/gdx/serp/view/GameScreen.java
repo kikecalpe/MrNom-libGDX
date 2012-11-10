@@ -1,5 +1,7 @@
 package es.dokansoft.gdx.serp.view;
 
+import java.util.List;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
 
+import es.dokansoft.gdx.serp.model.Poo;
 import es.dokansoft.gdx.serp.model.Settings;
 import es.dokansoft.gdx.serp.model.Snake;
 import es.dokansoft.gdx.serp.model.SnakePart;
@@ -47,6 +50,7 @@ public class GameScreen extends SerpScreen {
 	Texture stain1;
 	Texture stain2;
 	Texture stain3;
+	Texture poo;
 	
 	Sound click;
 	Sound eat;
@@ -92,6 +96,7 @@ public class GameScreen extends SerpScreen {
 		stain1 = Assets.stain1;
 		stain2 = Assets.stain2;
 		stain3 = Assets.stain3;
+		poo = Assets.poo;
 		
 		click = Assets.click;
 		eat = Assets.eat;
@@ -126,6 +131,7 @@ public class GameScreen extends SerpScreen {
 		stain1 = assets.get("stain1.png", Texture.class);
 		stain2 = assets.get("stain2.png", Texture.class);
 		stain3 = assets.get("stain3.png", Texture.class);
+		poo = assets.get("poo.png", Texture.class);
 		
 		click = assets.get("click.ogg", Sound.class);
 		eat = assets.get("eat.ogg", Sound.class);
@@ -250,7 +256,17 @@ public class GameScreen extends SerpScreen {
 		Snake snake = world.getSnake();
 		SnakePart head = snake.parts.get(0);
 		Stain stain = world.getStain();
+		List<Poo> poos = world.getPoos();
 		
+		int x,y;
+		
+		if (!poos.isEmpty()){
+			for (Poo p: poos){
+				x = p.x * 32;
+				y = p.y * 32;
+				spriteBatch.draw(poo, x*ppuX, y*ppuY, 32*ppuX, 32*ppuY);
+			}
+		}
 		Texture stainPixmap = null;
 		if (stain.type == Stain.TYPE_1)
 			stainPixmap = stain1;
@@ -258,8 +274,8 @@ public class GameScreen extends SerpScreen {
 			stainPixmap = stain2;
 		if (stain.type == Stain.TYPE_3)
 			stainPixmap = stain3;
-		int x = stain.x * 32;
-		int y = stain.y * 32;
+		x = stain.x * 32;
+		y = stain.y * 32;
 		spriteBatch.draw(stainPixmap, x*ppuX, y*ppuY, 32*ppuX, 32*ppuY);
 		
 		int len = snake.parts.size();
